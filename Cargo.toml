@@ -1,0 +1,25 @@
+[package]
+name = "ppc32-jit"
+version = "0.1.0"
+edition = "2021"
+description = "A just-in-time translator from 32-bit PowerPC user-level code to x86-64: a flat guest address space, chained blocks, host atomics, SSE2/FMA floating point"
+license = "MIT"
+repository = "https://github.com/jpryss/ppc32-jit"
+keywords = ["powerpc", "emulator", "jit", "binary-translation"]
+categories = ["emulators", "hardware-support"]
+readme = "README.md"
+
+[dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+# the differential test (examples/fuzz.rs, tests/differential.rs) runs the JIT against
+# Unicorn (QEMU's TCG); pinned to the version the JIT was developed against
+unicorn-engine = { version = "=2.1.3", default-features = false, features = ["arch_ppc"] }
+
+[profile.release]
+opt-level = 3
+debug = 1
+
+[profile.release.package.unicorn-engine]
+debug = false

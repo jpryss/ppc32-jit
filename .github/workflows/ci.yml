@@ -1,0 +1,16 @@
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build tools (Unicorn, the reference of the differential test, is built from source)
+        run: sudo apt-get update && sudo apt-get install -y cmake pkg-config build-essential
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release
+      - run: cargo test --release
+      - run: cargo run --release --example fuzz -- 20000 7
